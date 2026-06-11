@@ -1,6 +1,7 @@
 # Gradle files
 .gradle/
 build/
+bin/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -32,3 +33,23 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Other generated files
+*.ap_
+*.dex
+*.class
+*.zip
+*.jar
+# EXCEPT for the Gradle wrapper jar (keep this one!)
+!gradle/wrapper/gradle-wrapper.jar
+*~
+*.swp
+
+# Mac specific files
+.DS_Store
+
+# Ignore folders named ".kotlin" which are created at compile time
+.kotlin
+
+# Local markdown files
+*.local.md
