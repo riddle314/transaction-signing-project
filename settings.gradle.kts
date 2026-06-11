@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic") // This allows the main project to use plugins defined in build-logic
     repositories {
         google {
             content {
@@ -24,3 +25,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Transaction Signing"
 include(":app")
+include(":core:navigation")
+include(":core:common")
+include(":feature:withdrawal")
+include(":feature:signing")
