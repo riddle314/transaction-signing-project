@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.dimitriskatsikas.transactionsigning.ui.theme.TransactionSigningTheme
+import com.dimitriskatsikas.transactionsigning.core.designsystem.theme.TransactionSigningTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -27,5 +27,6 @@ rootProject.name = "Transaction Signing"
 include(":app")
 include(":core:navigation")
 include(":core:common")
+include(":core:designsystem")
 include(":feature:withdrawal")
 include(":feature:signing")

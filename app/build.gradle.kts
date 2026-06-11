@@ -46,6 +46,7 @@ dependencies {
 
     implementation(project(":core:navigation"))
     implementation(project(":core:common"))
+    implementation(project(":core:designsystem"))
     implementation(project(":feature:withdrawal"))
     implementation(project(":feature:signing"))
 }

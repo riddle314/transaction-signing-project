@@ -1,4 +1,4 @@
-package com.dimitriskatsikas.transactionsigning.ui.theme
+package com.dimitriskatsikas.transactionsigning.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 
