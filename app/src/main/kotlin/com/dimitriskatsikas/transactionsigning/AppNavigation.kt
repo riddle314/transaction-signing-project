@@ -7,8 +7,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.dimitriskatsikas.navigation.Route
-import com.dimitriskatsikas.transactionsigning.feature.withdrawal.ui.withdrawal.WithdrawalScreen
-import com.dimitriskatsikas.transactionsigning.feature.signing.ui.signing.SigningScreen
+import com.dimitriskatsikas.withdrawal.ui.withdrawal.WithdrawalScreen
+import com.dimitriskatsikas.signing.ui.signing.SigningScreen
 
 @Composable
 fun AppNavigation() {
