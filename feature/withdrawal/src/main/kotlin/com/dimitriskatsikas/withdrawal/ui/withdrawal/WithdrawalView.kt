@@ -3,8 +3,14 @@ package com.dimitriskatsikas.withdrawal.ui.withdrawal
 class WithdrawalView {
     data class State(
         val amount: String = "",
-        val isProcessing: Boolean = false
+        val ctaState: CtaState = CtaState.Disabled
     )
+
+    sealed interface CtaState {
+        data object Enabled : CtaState
+        data object Disabled : CtaState
+        data object Loading : CtaState
+    }
 
     sealed interface Effect {
         data object NavigateToSigning : Effect
