@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="withdrawal_title">Withdrawal</string>
+    <string name="withdrawal_amount_label">Enter Amount</string>
+    <string name="withdrawal_continue_button">Continue</string>
+</resources>

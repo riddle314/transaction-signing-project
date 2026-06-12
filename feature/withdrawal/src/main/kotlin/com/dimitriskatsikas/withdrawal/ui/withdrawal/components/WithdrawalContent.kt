@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.dimitriskatsikas.transactionsigning.feature.withdrawal.R
 import com.dimitriskatsikas.common.previews.Previews
 import com.dimitriskatsikas.withdrawal.ui.withdrawal.WithdrawalView
 
@@ -35,7 +37,7 @@ internal fun WithdrawalContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Withdrawal",
+                text = stringResource(R.string.withdrawal_title),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -43,14 +45,14 @@ internal fun WithdrawalContent(
             OutlinedTextField(
                 value = state.amount,
                 onValueChange = { onUiAction(WithdrawalView.UiAction.AmountChanged(it)) },
-                label = { Text("Enter Amount") }
+                label = { Text(stringResource(R.string.withdrawal_amount_label)) }
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = { onUiAction(WithdrawalView.UiAction.SubmitWithdrawal) },
                 enabled = state.amount.isNotEmpty()
             ) {
-                Text("Continue")
+                Text(stringResource(R.string.withdrawal_continue_button))
             }
         }
     }
