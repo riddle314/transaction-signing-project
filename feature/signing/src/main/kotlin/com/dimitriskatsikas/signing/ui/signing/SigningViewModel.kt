@@ -2,6 +2,7 @@ package com.dimitriskatsikas.signing.ui.signing
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dimitriskatsikas.common.dispatchers.AppDispatchers
 import com.dimitriskatsikas.signing.ui.signing.SigningView.OperationType
 import com.dimitriskatsikas.signing.ui.signing.SigningView.SigningMechanism
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SigningViewModel @Inject constructor(
-    val operationType: OperationType
+    private val operationType: OperationType,
+    private val appDispatchers: AppDispatchers
 ) : ViewModel() {
 
     private val signingMechanisms = SigningMechanism.entries

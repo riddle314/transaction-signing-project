@@ -1,6 +1,7 @@
 plugins {
     id("com.dimitriskatsikas.plugins.android-library")
     id("com.dimitriskatsikas.plugins.android-compose")
+    id("com.dimitriskatsikas.plugins.android-hilt")
 }
 
 android {
