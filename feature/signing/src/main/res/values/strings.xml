@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="signing_title">Sign Transaction</string>
+    <string name="signing_back_content_description">Back</string>
+</resources>
