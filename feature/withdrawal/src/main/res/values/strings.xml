@@ -3,4 +3,6 @@
     <string name="withdrawal_title">Withdrawal</string>
     <string name="withdrawal_amount_label">Enter Amount</string>
     <string name="withdrawal_continue_button">Continue</string>
+    <string name="withdrawal_error_transaction_canceled">Transaction canceled</string>
+    <string name="withdrawal_error_transaction_failed">Transaction failed</string>
 </resources>

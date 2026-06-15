@@ -2,6 +2,7 @@ package com.dimitriskatsikas.withdrawal.ui.withdrawal.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -36,6 +39,7 @@ import com.dimitriskatsikas.withdrawal.ui.withdrawal.WithdrawalView
 @Composable
 internal fun WithdrawalContent(
     state: WithdrawalView.State,
+    snackbarHostState: SnackbarHostState,
     onUiAction: (WithdrawalView.UiAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -46,27 +50,42 @@ internal fun WithdrawalContent(
                 title = { Text(stringResource(R.string.withdrawal_title)) },
             )
         },
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AmountInputField(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        content = { innerPadding ->
+            MainContent(
+                innerPadding = innerPadding,
                 state = state,
-                onUiAction = onUiAction,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            ContinueButton(
-                ctaState = state.ctaState,
-                onUiAction = onUiAction,
-                modifier = Modifier.fillMaxWidth()
+                onUiAction = onUiAction
             )
         }
+    )
+}
+
+@Composable
+private fun MainContent(
+    innerPadding: PaddingValues,
+    state: WithdrawalView.State,
+    onUiAction: (WithdrawalView.UiAction) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        AmountInputField(
+            state = state,
+            onUiAction = onUiAction,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        ContinueButton(
+            ctaState = state.ctaState,
+            onUiAction = onUiAction,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
@@ -145,6 +164,7 @@ private fun WithdrawalContentPreview(
 ) {
     WithdrawalContent(
         state = state,
+        snackbarHostState = SnackbarHostState(),
         onUiAction = {}
     )
 }

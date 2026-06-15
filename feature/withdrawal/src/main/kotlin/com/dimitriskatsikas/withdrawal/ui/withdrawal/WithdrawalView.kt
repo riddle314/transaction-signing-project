@@ -14,7 +14,12 @@ class WithdrawalView {
 
     sealed interface Effect {
         data object NavigateToSigning : Effect
-        data object ShowErrorToast : Effect
+        data class ShowErrorToast(val errorType: ErrorType) : Effect
+    }
+
+    sealed interface ErrorType {
+        data object TransactionCanceled : ErrorType
+        data object TransactionFailed : ErrorType
     }
 
     sealed interface UiAction {
