@@ -17,11 +17,11 @@ class WithdrawalViewModel @Inject constructor(
     private val appDispatchers: AppDispatchers
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(WithdrawalView.State())
+    private val _state = MutableStateFlow(WithdrawalView.State.Content())
     val state = _state.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = WithdrawalView.State()
+        initialValue = WithdrawalView.State.Content()
     )
 
     private val _effect: Channel<WithdrawalView.Effect> = Channel(Channel.CONFLATED)

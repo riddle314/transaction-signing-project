@@ -1,10 +1,16 @@
 package com.dimitriskatsikas.withdrawal.ui.withdrawal
 
 class WithdrawalView {
-    data class State(
-        val amount: String = "",
-        val ctaState: CtaState = CtaState.Disabled
-    )
+
+    sealed interface State {
+        data class Content(
+            val amount: String = "",
+            val ctaState: CtaState = CtaState.Disabled
+        ): State
+
+        data object Success: State
+    }
+
 
     sealed interface CtaState {
         data object Enabled : CtaState

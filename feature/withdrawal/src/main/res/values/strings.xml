@@ -5,4 +5,5 @@
     <string name="withdrawal_continue_button">Continue</string>
     <string name="withdrawal_error_transaction_canceled">Transaction canceled</string>
     <string name="withdrawal_error_transaction_failed">Transaction failed</string>
+    <string name="withdrawal_success_message">Transaction was successful</string>
 </resources>

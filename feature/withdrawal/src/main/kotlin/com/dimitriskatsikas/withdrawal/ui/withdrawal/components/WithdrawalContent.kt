@@ -1,6 +1,7 @@
 package com.dimitriskatsikas.withdrawal.ui.withdrawal.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -67,6 +68,22 @@ private fun MainContent(
     state: WithdrawalView.State,
     onUiAction: (WithdrawalView.UiAction) -> Unit
 ) {
+    when (state) {
+        WithdrawalView.State.Success -> SuccessContent(innerPadding = innerPadding)
+        is WithdrawalView.State.Content -> TransactionInputContent(
+            innerPadding = innerPadding,
+            state = state,
+            onUiAction = onUiAction
+        )
+    }
+}
+
+@Composable
+private fun TransactionInputContent(
+    innerPadding: PaddingValues,
+    state: WithdrawalView.State.Content,
+    onUiAction: (WithdrawalView.UiAction) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +93,7 @@ private fun MainContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AmountInputField(
-            state = state,
+            amount = state.amount,
             onUiAction = onUiAction,
             modifier = Modifier.fillMaxWidth()
         )
@@ -90,14 +107,31 @@ private fun MainContent(
 }
 
 @Composable
+private fun SuccessContent(
+    innerPadding: PaddingValues
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(R.string.withdrawal_success_message),
+            style = MaterialTheme.typography.headlineSmall
+        )
+    }
+}
+
+@Composable
 private fun AmountInputField(
-    state: WithdrawalView.State,
+    amount: String,
     onUiAction: (WithdrawalView.UiAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
     OutlinedTextField(
-        value = state.amount,
+        value = amount,
         onValueChange = { onUiAction(WithdrawalView.UiAction.AmountChanged(it)) },
         label = { Text(stringResource(R.string.withdrawal_amount_label)) },
         keyboardOptions = KeyboardOptions(
