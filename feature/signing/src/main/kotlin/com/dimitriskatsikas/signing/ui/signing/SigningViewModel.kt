@@ -1,5 +1,6 @@
 package com.dimitriskatsikas.signing.ui.signing
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dimitriskatsikas.common.dispatchers.AppDispatchers
@@ -14,11 +15,17 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
+private const val OPERATION_TYPE = "operationType"
+
 @HiltViewModel
 class SigningViewModel @Inject constructor(
-    private val operationType: OperationType,
+    savedStateHandle: SavedStateHandle,
     private val appDispatchers: AppDispatchers
 ) : ViewModel() {
+
+    private val operationType: OperationType = OperationType.valueOf(
+        checkNotNull(savedStateHandle[OPERATION_TYPE])
+    )
 
     private val signingMechanisms = SigningMechanism.entries
     private val _state = MutableStateFlow(
