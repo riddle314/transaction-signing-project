@@ -8,5 +8,5 @@ sealed interface Route {
     data object Withdrawal : Route
 
     @Serializable
-    data class Signing(val operationType: String) : Route
+    data class Signing(val operationType: String, val challenge: String) : Route
 }

@@ -1,15 +1,25 @@
 package com.dimitriskatsikas.signing.ui.signing.components
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -17,26 +27,50 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.dimitriskatsikas.common.previews.Previews
 import com.dimitriskatsikas.signing.ui.signing.SigningView
+import com.dimitriskatsikas.signing.ui.signing.SigningView.SigningMechanism
 import com.dimitriskatsikas.transactionsigning.feature.signing.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SigningContent(
     state: SigningView.State,
-    onUiAction: (SigningView.UiAction) -> Unit,
-    modifier: Modifier = Modifier
+    onUiAction: (SigningView.UiAction) -> Unit
+) {
+    BackHandler {
+        onUiAction(SigningView.UiAction.BackPress)
+    }
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (state) {
+            is SigningView.State.Loading -> Loading()
+            is SigningView.State.SigningLoading -> SigningLoading(state.signingMechanism)
+            is SigningView.State.Content -> MainContent(
+                state = state,
+                onUiAction = onUiAction
+            )
+
+            SigningView.State.Error -> TODO()
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MainContent(
+    state: SigningView.State.Content,
+    onUiAction: (SigningView.UiAction) -> Unit
 ) {
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(R.string.signing_title)) },
+                title = { },
                 navigationIcon = {
-                    IconButton(onClick = { onUiAction(SigningView.UiAction.Back) }) {
+                    IconButton(onClick = { onUiAction(SigningView.UiAction.BackPress) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = stringResource(R.string.signing_back_content_description)
@@ -46,7 +80,7 @@ internal fun SigningContent(
             )
         },
         content = { innerPadding ->
-            MainContent(
+            SigningOptions(
                 innerPadding = innerPadding,
                 state = state,
                 onUiAction = onUiAction
@@ -56,21 +90,90 @@ internal fun SigningContent(
 }
 
 @Composable
-private fun MainContent(
+private fun SigningOptions(
     innerPadding: PaddingValues,
-    state: SigningView.State,
+    state: SigningView.State.Content,
     onUiAction: (SigningView.UiAction) -> Unit
 ) {
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
-            .fillMaxSize()
             .padding(innerPadding)
+            .verticalScroll(scrollState)
             .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
     ) {
-        //TODO here add the content
+        Text(
+            text = stringResource(
+                R.string.signing_authorize_title,
+                getOperationTypeName(state.operationType)
+            ),
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+
+        Text(
+            text = stringResource(R.string.signing_options_description),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.padding(bottom = 16.dp),
+            textAlign = TextAlign.Center
+        )
+
+        state.signingMechanisms.forEach { mechanism ->
+            Button(
+                onClick = { onUiAction(SigningView.UiAction.SignTransaction(mechanism)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.signing_button_text, mechanism.type),
+                    style = MaterialTheme.typography.labelLarge
+                )
+            }
+        }
     }
+}
+
+@Composable
+private fun SigningLoading(signingMechanism: SigningMechanism) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator(
+            color = MaterialTheme.colorScheme.primary,
+            strokeWidth = 4.dp
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = stringResource(R.string.signing_loading_text, signingMechanism.type),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+    }
+}
+
+@Composable
+private fun Loading() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            color = MaterialTheme.colorScheme.primary,
+            strokeWidth = 4.dp
+        )
+    }
+}
+
+private fun getOperationTypeName(operationType: SigningView.OperationType): Int = when (operationType) {
+    SigningView.OperationType.WITHDRAWAL -> R.string.signing_withdrawal
+    SigningView.OperationType.TRANSFER -> R.string.signing_transfer
+    SigningView.OperationType.SWAP -> R.string.signing_swap
 }
 
 @Previews

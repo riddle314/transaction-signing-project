@@ -9,9 +9,14 @@ class SigningPreviewStateProvider : PreviewParameterProvider<SigningView.State> 
 
     override val values = sequenceOf(
         SigningView.State.Loading,
+        SigningView.State.SigningLoading(SigningMechanism(type = "PASSKEYS")),
         SigningView.State.Content(
             operationType = OperationType.WITHDRAWAL,
-            signingMechanisms = SigningMechanism.entries
+            signingMechanisms = listOf(
+                SigningMechanism(type = "PASSKEYS"),
+                SigningMechanism(type = "OTP"),
+                SigningMechanism(type = "EOA")
+            )
         )
     )
 }

@@ -9,6 +9,8 @@ class SigningView {
         ) : State
 
         data object Loading : State
+        data object Error: State
+        data class SigningLoading(val signingMechanism: SigningMechanism) : State
     }
 
     sealed interface Effect {
@@ -17,7 +19,8 @@ class SigningView {
 
     sealed interface UiAction {
         data class SignTransaction(val signingMechanism: SigningMechanism) : UiAction
-        data object Back : UiAction
+        data object BackPress : UiAction
+        data object RetryLoading: UiAction
     }
 
     enum class OperationType {
@@ -26,11 +29,9 @@ class SigningView {
         SWAP
     }
 
-    enum class SigningMechanism {
-        PASSKEYS,
-        OTP,
-        EOA
-    }
+    data class SigningMechanism(
+        val type: String
+    )
 
     enum class SigningResult {
         SUCCESS,
