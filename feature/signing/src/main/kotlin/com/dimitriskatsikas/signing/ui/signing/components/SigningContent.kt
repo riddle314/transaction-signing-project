@@ -46,13 +46,12 @@ internal fun SigningContent(
     Box(modifier = Modifier.fillMaxSize()) {
         when (state) {
             is SigningView.State.Loading -> Loading()
-            is SigningView.State.SigningLoading -> SigningLoading(state.signingMechanism)
+            is SigningView.State.SigningLoading -> SigningLoading(signingMechanism = state.signingMechanism)
+            SigningView.State.Error -> ErrorContent(onUiAction = onUiAction)
             is SigningView.State.Content -> MainContent(
                 state = state,
                 onUiAction = onUiAction
             )
-
-            SigningView.State.Error -> TODO()
         }
     }
 }
@@ -102,7 +101,7 @@ private fun SigningOptions(
             .verticalScroll(scrollState)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
             text = stringResource(
@@ -167,6 +166,28 @@ private fun Loading() {
             color = MaterialTheme.colorScheme.primary,
             strokeWidth = 4.dp
         )
+    }
+}
+
+@Composable
+private fun ErrorContent(onUiAction: (SigningView.UiAction) -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(R.string.signing_error),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = { onUiAction(SigningView.UiAction.RetryLoading) }) {
+            Text(
+                text = stringResource(R.string.signing_retry),
+                style = MaterialTheme.typography.labelLarge
+            )
+        }
     }
 }
 

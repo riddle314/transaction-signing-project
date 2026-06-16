@@ -8,4 +8,6 @@
     <string name="signing_withdrawal">Withdrawal</string>
     <string name="signing_transfer">Transfer</string>
     <string name="signing_swap">Swap</string>
+    <string name="signing_error">Error</string>
+    <string name="signing_retry">Retry</string>
 </resources>

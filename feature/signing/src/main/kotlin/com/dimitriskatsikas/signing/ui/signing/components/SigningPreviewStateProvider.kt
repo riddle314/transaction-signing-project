@@ -17,6 +17,7 @@ class SigningPreviewStateProvider : PreviewParameterProvider<SigningView.State> 
                 SigningMechanism(type = "OTP"),
                 SigningMechanism(type = "EOA")
             )
-        )
+        ),
+        SigningView.State.Error
     )
 }
