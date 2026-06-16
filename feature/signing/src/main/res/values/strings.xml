@@ -10,4 +10,7 @@
     <string name="signing_swap">Swap</string>
     <string name="signing_error">Error</string>
     <string name="signing_retry">Retry</string>
+    <string name="signing_method_passkey">Passkey</string>
+    <string name="signing_method_otp">OTP</string>
+    <string name="signing_method_eoa">EOA</string>
 </resources>

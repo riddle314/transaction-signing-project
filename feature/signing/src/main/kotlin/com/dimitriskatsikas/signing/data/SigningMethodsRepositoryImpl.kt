@@ -10,9 +10,9 @@ class SigningMethodsRepositoryImpl @Inject constructor() : SigningMethodsReposit
     override suspend fun getSigningMethods(): Result<List<SigningMethod>> {
         return Result.success(
             listOf(
-                MockSigningMethod("PASSKEYS"),
-                MockSigningMethod("OTP"),
-                MockSigningMethod("EOA")
+                PasskeySigningMethod(),
+                OtpSigningMethod(),
+                EoaSigningMethod()
             )
         )
     }

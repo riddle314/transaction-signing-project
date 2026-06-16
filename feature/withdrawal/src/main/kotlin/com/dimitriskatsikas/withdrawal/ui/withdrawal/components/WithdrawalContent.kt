@@ -33,6 +33,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.dimitriskatsikas.common.previews.Previews
+import com.dimitriskatsikas.transactionsigning.core.designsystem.theme.TransactionSigningTheme
 import com.dimitriskatsikas.transactionsigning.feature.withdrawal.R
 import com.dimitriskatsikas.withdrawal.ui.withdrawal.WithdrawalView
 
@@ -196,9 +197,11 @@ private fun ContinueButton(
 private fun WithdrawalContentPreview(
     @PreviewParameter(WithdrawalPreviewStateProvider::class) state: WithdrawalView.State
 ) {
-    WithdrawalContent(
-        state = state,
-        snackbarHostState = SnackbarHostState(),
-        onUiAction = {}
-    )
+    TransactionSigningTheme {
+        WithdrawalContent(
+            state = state,
+            snackbarHostState = SnackbarHostState(),
+            onUiAction = {}
+        )
+    }
 }

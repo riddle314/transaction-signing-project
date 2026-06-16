@@ -9,7 +9,7 @@ class SigningView {
         ) : State
 
         data object Loading : State
-        data object Error: State
+        data object Error : State
         data class SigningLoading(val signingMechanism: SigningMechanism) : State
     }
 
@@ -20,7 +20,7 @@ class SigningView {
     sealed interface UiAction {
         data class SignTransaction(val signingMechanism: SigningMechanism) : UiAction
         data object BackPress : UiAction
-        data object RetryLoading: UiAction
+        data object RetryLoading : UiAction
     }
 
     enum class OperationType {
@@ -30,8 +30,14 @@ class SigningView {
     }
 
     data class SigningMechanism(
-        val type: String
+        val type: SigningMethodType
     )
+
+    enum class SigningMethodType {
+        PASSKEY,
+        OTP,
+        EOA
+    }
 
     enum class SigningResult {
         SUCCESS,

@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.dimitriskatsikas.common.previews.Previews
 import com.dimitriskatsikas.signing.ui.signing.SigningView
 import com.dimitriskatsikas.signing.ui.signing.SigningView.SigningMechanism
+import com.dimitriskatsikas.transactionsigning.core.designsystem.theme.TransactionSigningTheme
 import com.dimitriskatsikas.transactionsigning.feature.signing.R
 
 @Composable
@@ -43,7 +45,7 @@ internal fun SigningContent(
     BackHandler {
         onUiAction(SigningView.UiAction.BackPress)
     }
-    Box(modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier.fillMaxSize()) {
         when (state) {
             is SigningView.State.Loading -> Loading()
             is SigningView.State.SigningLoading -> SigningLoading(signingMechanism = state.signingMechanism)
@@ -106,7 +108,7 @@ private fun SigningOptions(
         Text(
             text = stringResource(
                 R.string.signing_authorize_title,
-                getOperationTypeName(state.operationType)
+                stringResource(getOperationTypeRes(state.operationType))
             ),
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onBackground
@@ -128,7 +130,10 @@ private fun SigningOptions(
                     .height(50.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.signing_button_text, mechanism.type),
+                    text = stringResource(
+                        R.string.signing_button_text,
+                        stringResource(getSigningMethodRes(mechanism.type))
+                    ),
                     style = MaterialTheme.typography.labelLarge
                 )
             }
@@ -149,7 +154,10 @@ private fun SigningLoading(signingMechanism: SigningMechanism) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = stringResource(R.string.signing_loading_text, signingMechanism.type),
+            text = stringResource(
+                R.string.signing_loading_text,
+                stringResource(getSigningMethodRes(signingMechanism.type))
+            ),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground
         )
@@ -191,10 +199,16 @@ private fun ErrorContent(onUiAction: (SigningView.UiAction) -> Unit) {
     }
 }
 
-private fun getOperationTypeName(operationType: SigningView.OperationType): Int = when (operationType) {
+private fun getOperationTypeRes(operationType: SigningView.OperationType): Int = when (operationType) {
     SigningView.OperationType.WITHDRAWAL -> R.string.signing_withdrawal
     SigningView.OperationType.TRANSFER -> R.string.signing_transfer
     SigningView.OperationType.SWAP -> R.string.signing_swap
+}
+
+private fun getSigningMethodRes(type: SigningView.SigningMethodType): Int = when (type) {
+    SigningView.SigningMethodType.PASSKEY -> R.string.signing_method_passkey
+    SigningView.SigningMethodType.OTP -> R.string.signing_method_otp
+    SigningView.SigningMethodType.EOA -> R.string.signing_method_eoa
 }
 
 @Previews
@@ -202,8 +216,10 @@ private fun getOperationTypeName(operationType: SigningView.OperationType): Int 
 private fun SigningContentPreview(
     @PreviewParameter(SigningPreviewStateProvider::class) state: SigningView.State
 ) {
-    SigningContent(
-        state = state,
-        onUiAction = {}
-    )
+    TransactionSigningTheme {
+        SigningContent(
+            state = state,
+            onUiAction = {}
+        )
+    }
 }

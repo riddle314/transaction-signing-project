@@ -9,6 +9,8 @@ import com.dimitriskatsikas.signing.domain.SigningMethodsRepository
 import com.dimitriskatsikas.signing.ui.signing.SigningView.OperationType
 import com.dimitriskatsikas.signing.ui.signing.SigningView.SigningMechanism
 import com.dimitriskatsikas.signing.ui.signing.SigningView.SigningResult
+import com.dimitriskatsikas.signing.ui.signing.mappers.toSigningMechanism
+import com.dimitriskatsikas.signing.ui.signing.mappers.toUiType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -32,7 +34,7 @@ class SigningViewModel @Inject constructor(
         checkNotNull(savedStateHandle[OPERATION_TYPE])
     )
     private val challenge: String = checkNotNull(savedStateHandle[CHALLENGE])
-    private var domainMethods: List<SigningMethod> = emptyList()
+    private var signingMethods: List<SigningMethod> = emptyList()
 
     private val _state = MutableStateFlow<SigningView.State>(SigningView.State.Loading)
     val state = _state.asStateFlow()
@@ -48,13 +50,10 @@ class SigningViewModel @Inject constructor(
         viewModelScope.launch(appDispatchers.io) {
             _state.value = SigningView.State.Loading
             signingMechanismsRepository.getSigningMethods().onSuccess { methods ->
-                domainMethods = methods
-                val signingMechanisms = methods.map { method ->
-                    SigningMechanism(type = method.type)
-                }
+                signingMethods = methods
                 _state.value = SigningView.State.Content(
                     operationType = operationType,
-                    signingMechanisms = signingMechanisms
+                    signingMechanisms = methods.toSigningMechanism()
                 )
             }.onFailure {
                 _state.value = SigningView.State.Error
@@ -65,14 +64,13 @@ class SigningViewModel @Inject constructor(
     fun onUiAction(action: SigningView.UiAction) {
         when (action) {
             is SigningView.UiAction.SignTransaction -> signTransaction(action.signingMechanism)
+            SigningView.UiAction.RetryLoading -> loadSigningOptions()
             SigningView.UiAction.BackPress -> {
                 val currentState = _state.value
                 if (currentState is SigningView.State.Content) {
                     cancelSigning()
                 }
             }
-
-            SigningView.UiAction.RetryLoading -> loadSigningOptions()
         }
     }
 
@@ -81,7 +79,8 @@ class SigningViewModel @Inject constructor(
         if (currentState is SigningView.State.Content) {
             viewModelScope.launch(appDispatchers.io) {
                 _state.value = SigningView.State.SigningLoading(signingMechanism = mechanism)
-                val selectedMethod = domainMethods.firstOrNull { it.type == mechanism.type }
+
+                val selectedMethod = signingMethods.firstOrNull { it.type.toUiType() == mechanism.type }
                 if (selectedMethod != null) {
                     val result = selectedMethod.sign(challenge)
                     result.onSuccess {
