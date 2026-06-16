@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.dimitriskatsikas.common.previews.Previews
@@ -47,11 +48,7 @@ internal fun WithdrawalContent(
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.withdrawal_title)) },
-            )
-        },
+        topBar = { TopAppBar(title = { Text(stringResource(R.string.withdrawal_title)) }) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         content = { innerPadding ->
             MainContent(
@@ -114,12 +111,14 @@ private fun SuccessContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding),
+            .padding(innerPadding)
+            .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = stringResource(R.string.withdrawal_success_message),
-            style = MaterialTheme.typography.headlineSmall
+            style = MaterialTheme.typography.headlineSmall,
+            textAlign = TextAlign.Center
         )
     }
 }

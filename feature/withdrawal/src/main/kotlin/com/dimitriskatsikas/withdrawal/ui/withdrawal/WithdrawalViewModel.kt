@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,6 +30,18 @@ class WithdrawalViewModel @Inject constructor(
     val effect: Flow<WithdrawalView.Effect> = _effect.receiveAsFlow()
 
     fun onUiAction(action: WithdrawalView.UiAction) {
+        when (action) {
+            is WithdrawalView.UiAction.AmountChanged -> {
+                _state.update {
+                    if (it is WithdrawalView.State.Content) {
+                        it.copy(amount = action.amount)
+                    } else it
+                }
+            }
 
+            WithdrawalView.UiAction.SubmitWithdrawal -> {
+                // TODO start the process to take the challenge and then send it to signing screen
+            }
+        }
     }
 }

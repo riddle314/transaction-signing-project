@@ -3,7 +3,7 @@ package com.dimitriskatsikas.withdrawal.ui.withdrawal.components
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.dimitriskatsikas.withdrawal.ui.withdrawal.WithdrawalView
 
-class WithdrawalPreviewStateProvider : PreviewParameterProvider<WithdrawalView.State> {
+internal class WithdrawalPreviewStateProvider : PreviewParameterProvider<WithdrawalView.State> {
 
     override val values = sequenceOf(
         WithdrawalView.State.Content(

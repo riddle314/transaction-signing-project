@@ -5,7 +5,7 @@ import com.dimitriskatsikas.signing.ui.signing.SigningView
 import com.dimitriskatsikas.signing.ui.signing.SigningView.OperationType
 import com.dimitriskatsikas.signing.ui.signing.SigningView.SigningMechanism
 
-class SigningPreviewStateProvider : PreviewParameterProvider<SigningView.State> {
+internal class SigningPreviewStateProvider : PreviewParameterProvider<SigningView.State> {
 
     override val values = sequenceOf(
         SigningView.State.Loading,

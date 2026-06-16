@@ -144,7 +144,9 @@ private fun SigningOptions(
 @Composable
 private fun SigningLoading(signingMechanism: SigningMechanism) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -167,7 +169,9 @@ private fun SigningLoading(signingMechanism: SigningMechanism) {
 @Composable
 private fun Loading() {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
@@ -180,7 +184,9 @@ private fun Loading() {
 @Composable
 private fun ErrorContent(onUiAction: (SigningView.UiAction) -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
