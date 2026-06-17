@@ -8,11 +8,12 @@ import com.dimitriskatsikas.signing.domain.SigningCoordinator
 import com.dimitriskatsikas.signing.domain.SigningMethod
 import com.dimitriskatsikas.signing.domain.SigningMethodsRepository
 import com.dimitriskatsikas.signing.domain.SigningResult
-import com.dimitriskatsikas.signing.ui.signing.SigningView.OperationType
+import com.dimitriskatsikas.navigation.OperationType
 import com.dimitriskatsikas.signing.ui.signing.SigningView.SigningMechanism
 import com.dimitriskatsikas.signing.ui.signing.mappers.toSigningMechanism
 import com.dimitriskatsikas.signing.ui.signing.mappers.toUiType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,9 +33,7 @@ class SigningViewModel @Inject constructor(
     private val appDispatchers: AppDispatchers
 ) : ViewModel() {
 
-    private val operationType: OperationType = OperationType.valueOf(
-        checkNotNull(savedStateHandle[OPERATION_TYPE])
-    )
+    private val operationType: OperationType = checkNotNull(savedStateHandle[OPERATION_TYPE])
     private val challenge: String = checkNotNull(savedStateHandle[CHALLENGE])
     private var signingMethods: List<SigningMethod> = emptyList()
 
@@ -55,7 +54,7 @@ class SigningViewModel @Inject constructor(
                 signingMethods = methods
                 _state.value = SigningView.State.Content(
                     operationType = operationType,
-                    signingMechanisms = methods.toSigningMechanism() //TODO make it immutable
+                    signingMechanisms = methods.toSigningMechanism().toImmutableList()
                 )
             }.onFailure {
                 _state.value = SigningView.State.Error

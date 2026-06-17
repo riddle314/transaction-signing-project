@@ -1,14 +1,16 @@
 package com.dimitriskatsikas.withdrawal.ui.withdrawal
 
+import com.dimitriskatsikas.navigation.OperationType
+
 class WithdrawalView {
 
     sealed interface State {
         data class Content(
             val amount: String = "",
             val ctaState: CtaState = CtaState.Disabled
-        ): State
+        ) : State
 
-        data object Success: State
+        data object Success : State
     }
 
 
@@ -19,7 +21,11 @@ class WithdrawalView {
     }
 
     sealed interface Effect {
-        data object NavigateToSigning : Effect
+        data class NavigateToSigning(
+            val operationType: OperationType,
+            val challenge: String
+        ) : Effect
+
         data class ShowErrorToast(val errorType: ErrorType) : Effect
     }
 

@@ -14,6 +14,7 @@ composeBom = "2026.02.00"
 materialIconsExtended = "1.7.8"
 nav3 = "1.0.1"
 kotlinxSerializationCore = "1.9.0"
+kotlinxCollectionsImmutable = "0.3.8"
 kolinxCoroutinesTest = "1.10.2"
 junitJupiter = "6.0.3"
 junitPlatform = "6.0.3"
@@ -46,6 +47,7 @@ androidx-lifecycle-viewmodel-navigation3 = { group = "androidx.lifecycle", name 
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kolinxCoroutinesTest" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerializationCore" }
+kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junitPlatform" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }

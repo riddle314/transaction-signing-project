@@ -1,11 +1,14 @@
 package com.dimitriskatsikas.signing.ui.signing
 
+import com.dimitriskatsikas.navigation.OperationType
+import kotlinx.collections.immutable.ImmutableList
+
 class SigningView {
 
     sealed interface State {
         data class Content(
             val operationType: OperationType,
-            val signingMechanisms: List<SigningMechanism> //TODO make it immutable
+            val signingMechanisms: ImmutableList<SigningMechanism>
         ) : State
 
         data object Loading : State
@@ -21,12 +24,6 @@ class SigningView {
         data class SignTransaction(val signingMechanism: SigningMechanism) : UiAction
         data object BackPress : UiAction
         data object RetryLoading : UiAction
-    }
-
-    enum class OperationType {
-        WITHDRAWAL,
-        TRANSFER,
-        SWAP
     }
 
     data class SigningMechanism(

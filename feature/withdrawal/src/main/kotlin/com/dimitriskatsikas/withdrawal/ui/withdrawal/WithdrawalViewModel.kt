@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.dimitriskatsikas.common.dispatchers.AppDispatchers
 import com.dimitriskatsikas.signing.domain.SigningCoordinator
 import com.dimitriskatsikas.signing.domain.SigningResult
+import com.dimitriskatsikas.navigation.OperationType
 import com.dimitriskatsikas.withdrawal.domain.WithdrawalTransactionRepository
 import com.dimitriskatsikas.withdrawal.ui.withdrawal.WithdrawalView.CtaState
 import com.dimitriskatsikas.withdrawal.ui.withdrawal.WithdrawalView.ErrorType
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.String
 
 @HiltViewModel
 class WithdrawalViewModel @Inject constructor(
@@ -72,7 +74,12 @@ class WithdrawalViewModel @Inject constructor(
 
                 withdrawalTransactionRepository.getQuotation(amount)
                     .onSuccess { result ->
-                        _effect.send(WithdrawalView.Effect.NavigateToSigning)
+                        _effect.send(
+                            WithdrawalView.Effect.NavigateToSigning(
+                                operationType = OperationType.WITHDRAWAL,
+                                challenge = result.challenge
+                            )
+                        )
 
                         when (val signingResult = signingCoordinator.awaitResult(result.challenge)) {
                             is SigningResult.Success -> {

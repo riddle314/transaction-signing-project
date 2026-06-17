@@ -47,12 +47,19 @@ private suspend fun handleEffect(
     snackbarHostState: SnackbarHostState
 ) {
     when (effect) {
-        WithdrawalView.Effect.NavigateToSigning -> TODO()
+        is WithdrawalView.Effect.NavigateToSigning -> backStack.add(
+            Route.Signing(
+                operationType = effect.operationType,
+                challenge = effect.challenge
+            )
+        )
+
         is WithdrawalView.Effect.ShowErrorToast -> {
             val message = when (effect.errorType) {
                 WithdrawalView.ErrorType.TransactionCanceled -> {
                     context.getString(R.string.withdrawal_error_transaction_canceled)
                 }
+
                 WithdrawalView.ErrorType.TransactionFailed -> {
                     context.getString(R.string.withdrawal_error_transaction_failed)
                 }

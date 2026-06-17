@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.dimitriskatsikas.navigation.OperationType
 import com.dimitriskatsikas.common.previews.Previews
 import com.dimitriskatsikas.signing.ui.signing.SigningView
 import com.dimitriskatsikas.signing.ui.signing.SigningView.SigningMechanism
@@ -205,10 +206,10 @@ private fun ErrorContent(onUiAction: (SigningView.UiAction) -> Unit) {
     }
 }
 
-private fun getOperationTypeRes(operationType: SigningView.OperationType): Int = when (operationType) {
-    SigningView.OperationType.WITHDRAWAL -> R.string.signing_withdrawal
-    SigningView.OperationType.TRANSFER -> R.string.signing_transfer
-    SigningView.OperationType.SWAP -> R.string.signing_swap
+private fun getOperationTypeRes(operationType: OperationType): Int = when (operationType) {
+    OperationType.WITHDRAWAL -> R.string.signing_withdrawal
+    OperationType.TRANSFER -> R.string.signing_transfer
+    OperationType.SWAP -> R.string.signing_swap
 }
 
 private fun getSigningMethodRes(type: SigningView.SigningMethodType): Int = when (type) {
