@@ -3,12 +3,11 @@ package com.dimitriskatsikas.transactionsigning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.dimitriskatsikas.navigation.Route
-import com.dimitriskatsikas.withdrawal.ui.withdrawal.WithdrawalScreen
 import com.dimitriskatsikas.signing.ui.signing.SigningScreen
+import com.dimitriskatsikas.withdrawal.ui.withdrawal.WithdrawalScreen
 
 @Composable
 fun AppNavigation() {
@@ -20,13 +19,12 @@ fun AppNavigation() {
         entryProvider = entryProvider {
             entry<Route.Withdrawal> {
                 WithdrawalScreen(
-                    viewModel = hiltViewModel(),
                     backStack = backStack
                 )
             }
-            entry<Route.Signing> {
+            entry<Route.Signing> { route ->
                 SigningScreen(
-                    viewModel = hiltViewModel(),
+                    route = route,
                     backStack = backStack
                 )
             }

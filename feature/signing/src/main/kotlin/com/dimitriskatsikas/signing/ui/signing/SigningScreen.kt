@@ -4,14 +4,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dimitriskatsikas.navigation.Route
 import com.dimitriskatsikas.signing.ui.signing.components.SigningContent
 
 @Composable
 fun SigningScreen(
-    viewModel: SigningViewModel,
-    backStack: SnapshotStateList<Route>
+    route: Route.Signing,
+    backStack: SnapshotStateList<Route>,
+    viewModel: SigningViewModel = hiltViewModel { factory: SigningViewModel.Factory ->
+        factory.create(route)
+    }
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 

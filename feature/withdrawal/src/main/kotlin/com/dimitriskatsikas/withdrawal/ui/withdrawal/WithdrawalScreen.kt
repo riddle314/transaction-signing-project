@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dimitriskatsikas.navigation.Route
 import com.dimitriskatsikas.transactionsigning.feature.withdrawal.R
@@ -15,8 +16,8 @@ import com.dimitriskatsikas.withdrawal.ui.withdrawal.components.WithdrawalConten
 
 @Composable
 fun WithdrawalScreen(
-    viewModel: WithdrawalViewModel,
-    backStack: SnapshotStateList<Route>
+    backStack: SnapshotStateList<Route>,
+    viewModel: WithdrawalViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }

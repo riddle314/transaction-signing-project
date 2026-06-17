@@ -1,6 +1,5 @@
 package com.dimitriskatsikas.signing.ui.signing
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dimitriskatsikas.common.dispatchers.AppDispatchers
@@ -13,6 +12,10 @@ import com.dimitriskatsikas.signing.ui.signing.SigningView.SigningMechanism
 import com.dimitriskatsikas.signing.ui.signing.mappers.toSigningMechanism
 import com.dimitriskatsikas.signing.ui.signing.mappers.toUiType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import com.dimitriskatsikas.navigation.Route
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -20,21 +23,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-private const val OPERATION_TYPE = "operationType"
-private const val CHALLENGE = "challenge"
-
-@HiltViewModel
-class SigningViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = SigningViewModel.Factory::class)
+class SigningViewModel @AssistedInject constructor(
+    @Assisted private val route: Route.Signing,
     private val signingMechanismsRepository: SigningMethodsRepository,
     private val signingCoordinator: SigningCoordinator,
     private val appDispatchers: AppDispatchers
 ) : ViewModel() {
 
-    private val operationType: OperationType = checkNotNull(savedStateHandle[OPERATION_TYPE])
-    private val challenge: String = checkNotNull(savedStateHandle[CHALLENGE])
+    private val operationType: OperationType = route.operationType
+    private val challenge: String = route.challenge
     private var signingMethods: List<SigningMethod> = emptyList()
 
     private val _state = MutableStateFlow<SigningView.State>(SigningView.State.Loading)
@@ -124,5 +123,10 @@ class SigningViewModel @Inject constructor(
             )
             _effect.send(SigningView.Effect.NavigateBack)
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(route: Route.Signing): SigningViewModel
     }
 }
