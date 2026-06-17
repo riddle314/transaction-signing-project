@@ -5,7 +5,7 @@ class SigningView {
     sealed interface State {
         data class Content(
             val operationType: OperationType,
-            val signingMechanisms: List<SigningMechanism>
+            val signingMechanisms: List<SigningMechanism> //TODO make it immutable
         ) : State
 
         data object Loading : State
@@ -14,7 +14,7 @@ class SigningView {
     }
 
     sealed interface Effect {
-        data class NavigateBackWithResult(val result: SigningResult) : Effect
+        data object NavigateBack : Effect
     }
 
     sealed interface UiAction {
@@ -37,11 +37,5 @@ class SigningView {
         PASSKEY,
         OTP,
         EOA
-    }
-
-    enum class SigningResult {
-        SUCCESS,
-        CANCELED,
-        FAILED
     }
 }

@@ -35,7 +35,7 @@ private fun handleEffect(
     backStack: SnapshotStateList<Route>
 ) {
     when (effect) {
-        is SigningView.Effect.NavigateBackWithResult -> TODO()
+        SigningView.Effect.NavigateBack -> backStack.removeLastOrNull()
     }
 }
 

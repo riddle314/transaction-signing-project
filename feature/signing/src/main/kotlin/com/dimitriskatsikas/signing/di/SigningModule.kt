@@ -13,7 +13,6 @@ import javax.inject.Singleton
 abstract class SigningModule {
 
     @Binds
-    @Singleton
     abstract fun bindSigningMethodsRepository(
         impl: SigningMethodsRepositoryImpl
     ): SigningMethodsRepository

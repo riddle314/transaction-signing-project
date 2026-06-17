@@ -3,6 +3,11 @@ package com.dimitriskatsikas.withdrawal.ui.withdrawal
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dimitriskatsikas.common.dispatchers.AppDispatchers
+import com.dimitriskatsikas.signing.domain.SigningCoordinator
+import com.dimitriskatsikas.signing.domain.SigningResult
+import com.dimitriskatsikas.withdrawal.domain.WithdrawalTransactionRepository
+import com.dimitriskatsikas.withdrawal.ui.withdrawal.WithdrawalView.CtaState
+import com.dimitriskatsikas.withdrawal.ui.withdrawal.WithdrawalView.ErrorType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -16,10 +21,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WithdrawalViewModel @Inject constructor(
+    private val withdrawalTransactionRepository: WithdrawalTransactionRepository,
+    private val signingCoordinator: SigningCoordinator,
     private val appDispatchers: AppDispatchers
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(WithdrawalView.State.Content())
+    private val _state = MutableStateFlow<WithdrawalView.State>(WithdrawalView.State.Content())
     val state = _state.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -32,16 +39,85 @@ class WithdrawalViewModel @Inject constructor(
     fun onUiAction(action: WithdrawalView.UiAction) {
         when (action) {
             is WithdrawalView.UiAction.AmountChanged -> {
-                _state.update {
-                    if (it is WithdrawalView.State.Content) {
-                        it.copy(amount = action.amount)
-                    } else it
+                _state.update { state ->
+                    if (state is WithdrawalView.State.Content) {
+                        state.copy(
+                            amount = action.amount,
+                            ctaState = if (action.amount.isEmpty()) {
+                                CtaState.Disabled
+                            } else {
+                                CtaState.Enabled
+                            }
+                        )
+                    } else state
                 }
             }
 
             WithdrawalView.UiAction.SubmitWithdrawal -> {
-                // TODO start the process to take the challenge and then send it to signing screen
+                submitWithdrawal()
             }
+        }
+    }
+
+    private fun submitWithdrawal() {
+        val currentState = _state.value
+        if (currentState is WithdrawalView.State.Content) {
+            val amount = currentState.amount
+            viewModelScope.launch(appDispatchers.io) {
+
+                _state.value = WithdrawalView.State.Content(
+                    amount = amount,
+                    ctaState = CtaState.Loading
+                )
+
+                withdrawalTransactionRepository.getQuotation(amount)
+                    .onSuccess { result ->
+                        _effect.send(WithdrawalView.Effect.NavigateToSigning)
+
+                        when (val signingResult = signingCoordinator.awaitResult(result.challenge)) {
+                            is SigningResult.Success -> {
+                                withdrawalTransactionRepository.submitSignedTransaction(signature = signingResult.signature)
+                                    .onSuccess {
+                                        _state.value = WithdrawalView.State.Success
+                                    }.onFailure {
+                                        handleFailure(amount, ErrorType.TransactionFailed)
+                                    }
+                            }
+
+                            SigningResult.Canceled -> handleFailure(
+                                amount = amount,
+                                errorType = ErrorType.TransactionCanceled
+                            )
+
+                            SigningResult.Failed -> handleFailure(
+                                amount = amount,
+                                errorType = ErrorType.TransactionFailed
+                            )
+                        }
+                    }.onFailure {
+                        handleFailure(
+                            amount = amount,
+                            errorType = ErrorType.TransactionFailed
+                        )
+                    }
+            }
+        }
+    }
+
+    private fun handleFailure(
+        amount: String,
+        errorType: ErrorType
+    ) {
+        viewModelScope.launch {
+            _effect.send(WithdrawalView.Effect.ShowErrorToast(errorType))
+            _state.value = WithdrawalView.State.Content(
+                amount = amount,
+                ctaState = if (amount.isEmpty()) {
+                    CtaState.Disabled
+                } else {
+                    CtaState.Enabled
+                }
+            )
         }
     }
 }

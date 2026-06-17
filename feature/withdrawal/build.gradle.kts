@@ -34,6 +34,7 @@ dependencies {
     testImplementation(libs.turbine)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(project(":feature:signing"))
     implementation(project(":core:navigation"))
     implementation(project(":core:common"))
     implementation(project(":core:designsystem"))

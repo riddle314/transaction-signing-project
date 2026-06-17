@@ -4,11 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dimitriskatsikas.common.dispatchers.AppDispatchers
+import com.dimitriskatsikas.signing.domain.SigningCoordinator
 import com.dimitriskatsikas.signing.domain.SigningMethod
 import com.dimitriskatsikas.signing.domain.SigningMethodsRepository
+import com.dimitriskatsikas.signing.domain.SigningResult
 import com.dimitriskatsikas.signing.ui.signing.SigningView.OperationType
 import com.dimitriskatsikas.signing.ui.signing.SigningView.SigningMechanism
-import com.dimitriskatsikas.signing.ui.signing.SigningView.SigningResult
 import com.dimitriskatsikas.signing.ui.signing.mappers.toSigningMechanism
 import com.dimitriskatsikas.signing.ui.signing.mappers.toUiType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +28,7 @@ private const val CHALLENGE = "challenge"
 class SigningViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val signingMechanismsRepository: SigningMethodsRepository,
+    private val signingCoordinator: SigningCoordinator,
     private val appDispatchers: AppDispatchers
 ) : ViewModel() {
 
@@ -53,7 +55,7 @@ class SigningViewModel @Inject constructor(
                 signingMethods = methods
                 _state.value = SigningView.State.Content(
                     operationType = operationType,
-                    signingMechanisms = methods.toSigningMechanism()
+                    signingMechanisms = methods.toSigningMechanism() //TODO make it immutable
                 )
             }.onFailure {
                 _state.value = SigningView.State.Error
@@ -68,7 +70,7 @@ class SigningViewModel @Inject constructor(
             SigningView.UiAction.BackPress -> {
                 val currentState = _state.value
                 if (currentState is SigningView.State.Content) {
-                    cancelSigning()
+                    signingCanceled()
                 }
             }
         }
@@ -83,29 +85,45 @@ class SigningViewModel @Inject constructor(
                 val selectedMethod = signingMethods.firstOrNull { it.type.toUiType() == mechanism.type }
                 if (selectedMethod != null) {
                     val result = selectedMethod.sign(challenge)
-                    result.onSuccess {
-                        _effect.send(SigningView.Effect.NavigateBackWithResult(SigningResult.SUCCESS))
+                    result.onSuccess { signature ->
+                        signingSucceeded(signature)
                     }.onFailure {
-                        _state.value = currentState
                         signingFailed()
                     }
                 } else {
-                    _state.value = currentState
                     signingFailed()
                 }
             }
         }
     }
 
-    private fun cancelSigning() {
+    private fun signingSucceeded(signature: String) {
         viewModelScope.launch {
-            _effect.send(SigningView.Effect.NavigateBackWithResult(SigningResult.CANCELED))
+            signingCoordinator.sendResult(
+                challenge = challenge,
+                result = SigningResult.Success(signature)
+            )
+            _effect.send(SigningView.Effect.NavigateBack)
+        }
+    }
+
+    private fun signingCanceled() {
+        viewModelScope.launch {
+            signingCoordinator.sendResult(
+                challenge = challenge,
+                result = SigningResult.Canceled
+            )
+            _effect.send(SigningView.Effect.NavigateBack)
         }
     }
 
     private fun signingFailed() {
         viewModelScope.launch {
-            _effect.send(SigningView.Effect.NavigateBackWithResult(SigningResult.FAILED))
+            signingCoordinator.sendResult(
+                challenge = challenge,
+                result = SigningResult.Failed
+            )
+            _effect.send(SigningView.Effect.NavigateBack)
         }
     }
 }
