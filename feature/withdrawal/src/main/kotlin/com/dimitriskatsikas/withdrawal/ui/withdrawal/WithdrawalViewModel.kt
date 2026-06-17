@@ -22,7 +22,7 @@ import javax.inject.Inject
 import kotlin.String
 
 @HiltViewModel
-class WithdrawalViewModel @Inject constructor(
+internal class WithdrawalViewModel @Inject constructor(
     private val withdrawalTransactionRepository: WithdrawalTransactionRepository,
     private val signingCoordinator: SigningCoordinator,
     private val appDispatchers: AppDispatchers

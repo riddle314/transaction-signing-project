@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class WithdrawalModule {
+internal abstract class WithdrawalModule {
 
     @Binds
     abstract fun bindWithdrawalTransactionRepository(

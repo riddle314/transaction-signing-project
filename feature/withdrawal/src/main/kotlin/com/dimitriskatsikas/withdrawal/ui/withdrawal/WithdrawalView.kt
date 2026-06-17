@@ -2,7 +2,7 @@ package com.dimitriskatsikas.withdrawal.ui.withdrawal
 
 import com.dimitriskatsikas.navigation.OperationType
 
-class WithdrawalView {
+internal class WithdrawalView {
 
     sealed interface State {
         data class Content(

@@ -1,6 +1,6 @@
 package com.dimitriskatsikas.withdrawal.domain
 
-interface WithdrawalTransactionRepository {
+internal interface WithdrawalTransactionRepository {
 
     suspend fun getQuotation(amount: String): Result<TransactionQuotation>
 

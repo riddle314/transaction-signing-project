@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SigningMethodsRepositoryImpl @Inject constructor() : SigningMethodsRepository {
+internal class SigningMethodsRepositoryImpl @Inject constructor() : SigningMethodsRepository {
     override suspend fun getSigningMethods(): Result<List<SigningMethod>> {
         return Result.success(
             listOf(

@@ -12,11 +12,11 @@ import com.dimitriskatsikas.signing.ui.signing.components.SigningContent
 @Composable
 fun SigningScreen(
     route: Route.Signing,
-    backStack: SnapshotStateList<Route>,
-    viewModel: SigningViewModel = hiltViewModel { factory: SigningViewModel.Factory ->
+    backStack: SnapshotStateList<Route>
+) {
+    val viewModel: SigningViewModel = hiltViewModel { factory: SigningViewModel.Factory ->
         factory.create(route)
     }
-) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     SigningContent(

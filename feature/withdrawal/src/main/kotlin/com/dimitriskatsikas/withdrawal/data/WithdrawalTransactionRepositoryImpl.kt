@@ -4,7 +4,7 @@ import com.dimitriskatsikas.withdrawal.domain.TransactionQuotation
 import com.dimitriskatsikas.withdrawal.domain.WithdrawalTransactionRepository
 import javax.inject.Inject
 
-class WithdrawalTransactionRepositoryImpl @Inject constructor() : WithdrawalTransactionRepository {
+internal class WithdrawalTransactionRepositoryImpl @Inject constructor() : WithdrawalTransactionRepository {
     override suspend fun getQuotation(amount: String): Result<TransactionQuotation> {
         return Result.success(
             TransactionQuotation(

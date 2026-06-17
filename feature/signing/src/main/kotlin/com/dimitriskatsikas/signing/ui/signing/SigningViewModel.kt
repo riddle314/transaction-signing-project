@@ -3,19 +3,19 @@ package com.dimitriskatsikas.signing.ui.signing
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dimitriskatsikas.common.dispatchers.AppDispatchers
+import com.dimitriskatsikas.navigation.OperationType
+import com.dimitriskatsikas.navigation.Route
 import com.dimitriskatsikas.signing.domain.SigningCoordinator
 import com.dimitriskatsikas.signing.domain.SigningMethod
 import com.dimitriskatsikas.signing.domain.SigningMethodsRepository
 import com.dimitriskatsikas.signing.domain.SigningResult
-import com.dimitriskatsikas.navigation.OperationType
 import com.dimitriskatsikas.signing.ui.signing.SigningView.SigningMechanism
 import com.dimitriskatsikas.signing.ui.signing.mappers.toSigningMechanism
 import com.dimitriskatsikas.signing.ui.signing.mappers.toUiType
-import dagger.hilt.android.lifecycle.HiltViewModel
-import com.dimitriskatsikas.navigation.Route
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = SigningViewModel.Factory::class)
-class SigningViewModel @AssistedInject constructor(
+internal class SigningViewModel @AssistedInject constructor(
     @Assisted private val route: Route.Signing,
     private val signingMechanismsRepository: SigningMethodsRepository,
     private val signingCoordinator: SigningCoordinator,

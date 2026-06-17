@@ -16,9 +16,9 @@ import com.dimitriskatsikas.withdrawal.ui.withdrawal.components.WithdrawalConten
 
 @Composable
 fun WithdrawalScreen(
-    backStack: SnapshotStateList<Route>,
-    viewModel: WithdrawalViewModel = hiltViewModel()
+    backStack: SnapshotStateList<Route>
 ) {
+    val viewModel: WithdrawalViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current

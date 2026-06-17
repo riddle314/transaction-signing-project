@@ -3,7 +3,7 @@ package com.dimitriskatsikas.signing.ui.signing
 import com.dimitriskatsikas.navigation.OperationType
 import kotlinx.collections.immutable.ImmutableList
 
-class SigningView {
+internal class SigningView {
 
     sealed interface State {
         data class Content(

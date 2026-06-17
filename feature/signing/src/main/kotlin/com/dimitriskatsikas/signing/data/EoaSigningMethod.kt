@@ -4,7 +4,7 @@ import com.dimitriskatsikas.signing.domain.SigningMethod
 import com.dimitriskatsikas.signing.domain.SigningMethodType
 import kotlin.time.Duration.Companion.milliseconds
 
-class EoaSigningMethod : SigningMethod {
+internal class EoaSigningMethod : SigningMethod {
     override val type: SigningMethodType = SigningMethodType.EOA
 
     override suspend fun sign(challenge: String): Result<String> {

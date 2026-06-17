@@ -1,6 +1,6 @@
 package com.dimitriskatsikas.withdrawal.domain
 
-data class TransactionQuotation(
+internal data class TransactionQuotation(
     val id: String,
     val amount: String,
     val fee: String,

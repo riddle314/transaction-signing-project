@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class SigningModule {
+internal abstract class SigningModule {
 
     @Binds
     abstract fun bindSigningMethodsRepository(
