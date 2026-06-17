@@ -14,6 +14,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -29,11 +30,7 @@ internal class WithdrawalViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<WithdrawalView.State>(WithdrawalView.State.Content())
-    val state = _state.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = WithdrawalView.State.Content()
-    )
+    val state = _state.asStateFlow()
 
     private val _effect: Channel<WithdrawalView.Effect> = Channel(Channel.CONFLATED)
     val effect: Flow<WithdrawalView.Effect> = _effect.receiveAsFlow()
@@ -55,18 +52,15 @@ internal class WithdrawalViewModel @Inject constructor(
                 }
             }
 
-            WithdrawalView.UiAction.SubmitWithdrawal -> {
-                submitWithdrawal()
-            }
+            WithdrawalView.UiAction.SubmitWithdrawal -> submitWithdrawal()
         }
     }
 
     private fun submitWithdrawal() {
         val currentState = _state.value
-        if (currentState is WithdrawalView.State.Content) {
+        if (currentState is WithdrawalView.State.Content && currentState.amount.isNotEmpty()) {
             val amount = currentState.amount
             viewModelScope.launch(appDispatchers.io) {
-
                 _state.value = WithdrawalView.State.Content(
                     amount = amount,
                     ctaState = CtaState.Loading
@@ -115,7 +109,7 @@ internal class WithdrawalViewModel @Inject constructor(
         amount: String,
         errorType: ErrorType
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(appDispatchers.main) {
             _effect.send(WithdrawalView.Effect.ShowErrorToast(errorType))
             _state.value = WithdrawalView.State.Content(
                 amount = amount,

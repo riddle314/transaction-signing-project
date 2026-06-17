@@ -96,7 +96,7 @@ internal class SigningViewModel @AssistedInject constructor(
     }
 
     private fun signingSucceeded(signature: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(appDispatchers.main) {
             signingCoordinator.sendResult(
                 challenge = challenge,
                 result = SigningResult.Success(signature)
@@ -106,7 +106,7 @@ internal class SigningViewModel @AssistedInject constructor(
     }
 
     private fun signingCanceled() {
-        viewModelScope.launch {
+        viewModelScope.launch(appDispatchers.main) {
             signingCoordinator.sendResult(
                 challenge = challenge,
                 result = SigningResult.Canceled
@@ -116,7 +116,7 @@ internal class SigningViewModel @AssistedInject constructor(
     }
 
     private fun signingFailed() {
-        viewModelScope.launch {
+        viewModelScope.launch(appDispatchers.main) {
             signingCoordinator.sendResult(
                 challenge = challenge,
                 result = SigningResult.Failed
