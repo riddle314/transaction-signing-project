@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<journey name="Withdrawal Flow Journey">
+    <description>Journey tests for withdrawal and signing flows</description>
+    <actions xml:space="preserve">
+        <action>Test case 1: Successful Withdrawal with Passkey
+- Verify the Withdrawal screen is shown with title "Withdrawal".
+- Verify that the Continue button is disabled.
+- Enter "100" in the "Enter Amount" input field.
+- Verify that the Continue button is now enabled.
+- Tap the "Continue" button.
+- Confirm the loading spinner appears on the Continue button.
+- Wait for navigation and confirm the app is on the "Authorize Withdrawal" screen.
+- Verify the description "Please choose a signing option below to authenticate this transaction request." is visible.
+- Tap the "Sign with Passkey" button.
+- Confirm that the signing loading state is shown with "Signing with Passkey" text.
+- Wait for navigation back to the Withdrawal screen.
+- Confirm that the final screen displays the success message "Transaction was successful".</action>
+        <action>Test case 2: Cancel Withdrawal via Back Button
+- Verify the Withdrawal screen is shown with title "Withdrawal".
+- Enter "50" in the "Enter Amount" input field.
+- Tap the "Continue" button.
+- Wait for navigation and confirm the app is on the "Authorize Withdrawal" screen.
+- Tap the back button with content description "Back".
+- Confirm the app navigates back to the Withdrawal screen.
+- Verify that the "Enter Amount" field still contains "50".
+- Verify that the Continue button is enabled.</action>
+        <action>Test case 3: Successful Withdrawal with OTP
+- Verify the Withdrawal screen is shown with title "Withdrawal".
+- Enter "250" in the "Enter Amount" input field.
+- Tap the "Continue" button.
+- Wait for navigation and confirm the app is on the "Authorize Withdrawal" screen.
+- Tap the "Sign with OTP" button.
+- Confirm that the signing loading state is shown with "Signing with OTP" text.
+- Wait for navigation back to the Withdrawal screen.
+- Confirm that the final screen displays the success message "Transaction was successful".</action>
+    </actions>
+</journey>
