@@ -45,13 +45,13 @@ internal class SigningViewModelTest {
     )
 
     private val signingCoordinator = SigningCoordinator()
-    private lateinit var repository: FakeSigningMethodsRepository
+    private lateinit var fakeRepository: FakeSigningMethodsRepository
     private lateinit var testedClass: SigningViewModel
 
     @BeforeEach
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        repository = FakeSigningMethodsRepository(Result.success(emptyList()))
+        fakeRepository = FakeSigningMethodsRepository(Result.success(emptyList()))
     }
 
     @AfterEach
@@ -62,7 +62,7 @@ internal class SigningViewModelTest {
     private fun createViewModel() {
         testedClass = SigningViewModel(
             signingRequest = signingRequest,
-            signingMechanismsRepository = repository,
+            signingMechanismsRepository = fakeRepository,
             signingCoordinator = signingCoordinator,
             appDispatchers = appDispatchers
         )
@@ -77,7 +77,7 @@ internal class SigningViewModelTest {
                     signResult = Result.success("signature")
                 )
             )
-            repository.result = Result.success(mockMethods)
+            fakeRepository.result = Result.success(mockMethods)
             createViewModel()
             advanceUntilIdle()
 
@@ -95,7 +95,7 @@ internal class SigningViewModelTest {
     @Test
     fun `given failed load of signing methods, when ViewModel initializes, then transitions state to Error`() =
         runTest(testDispatcher) {
-            repository.result = Result.failure(Exception("Load failed"))
+            fakeRepository.result = Result.failure(Exception("Load failed"))
             createViewModel()
             advanceUntilIdle()
 
@@ -108,7 +108,7 @@ internal class SigningViewModelTest {
     fun `given initial state is Error, when RetryLoading action received, then reloads signing options`() =
         runTest(testDispatcher) {
             // Start with failure
-            repository.result = Result.failure(Exception("Load failed"))
+            fakeRepository.result = Result.failure(Exception("Load failed"))
             createViewModel()
             advanceUntilIdle()
 
@@ -116,7 +116,7 @@ internal class SigningViewModelTest {
                 assertEquals(State.Error, awaitItem())
 
                 // Setup repository to succeed on retry
-                repository.result = Result.success(
+                fakeRepository.result = Result.success(
                     listOf(
                         FakeSigningMethod(
                             type = SigningMethodType.OTP,
@@ -146,7 +146,7 @@ internal class SigningViewModelTest {
                 type = SigningMethodType.PASSKEY,
                 signResult = Result.success("mock_signature")
             )
-            repository.result = Result.success(listOf(mockMethod))
+            fakeRepository.result = Result.success(listOf(mockMethod))
             createViewModel()
             advanceUntilIdle()
 
@@ -174,7 +174,7 @@ internal class SigningViewModelTest {
                 type = SigningMethodType.PASSKEY,
                 signResult = Result.failure(Exception("User cancel/fail"))
             )
-            repository.result = Result.success(listOf(mockMethod))
+            fakeRepository.result = Result.success(listOf(mockMethod))
             createViewModel()
             advanceUntilIdle()
 
@@ -198,7 +198,7 @@ internal class SigningViewModelTest {
     @Test
     fun `when BackPress action received, then sends canceled to coordinator and navigates back`() =
         runTest(testDispatcher) {
-            repository.result = Result.success(emptyList())
+            fakeRepository.result = Result.success(emptyList())
             createViewModel()
             advanceUntilIdle()
 

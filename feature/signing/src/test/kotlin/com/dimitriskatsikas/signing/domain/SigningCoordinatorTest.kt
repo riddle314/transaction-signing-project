@@ -1,5 +1,6 @@
 package com.dimitriskatsikas.signing.domain
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test
 
 internal class SigningCoordinatorTest {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val testDispatcher = UnconfinedTestDispatcher()
     private val testedClass = SigningCoordinator()
 

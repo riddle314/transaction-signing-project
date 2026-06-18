@@ -36,15 +36,15 @@ class WithdrawalViewModelTest {
     }
 
     private val signingCoordinator = SigningCoordinator()
-    private lateinit var repository: FakeWithdrawalTransactionRepository
+    private lateinit var fakeRepository: FakeWithdrawalTransactionRepository
     private lateinit var testedClass: WithdrawalViewModel
 
     @BeforeEach
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        repository = FakeWithdrawalTransactionRepository()
+        fakeRepository = FakeWithdrawalTransactionRepository()
         testedClass = WithdrawalViewModel(
-            withdrawalTransactionRepository = repository,
+            withdrawalTransactionRepository = fakeRepository,
             signingCoordinator = signingCoordinator,
             appDispatchers = appDispatchers
         )
@@ -79,7 +79,7 @@ class WithdrawalViewModelTest {
 
     @Test
     fun `given successful quotation and signing, when SubmitWithdrawal action received, then successfully submits transaction and transitions state to Success`() = runTest {
-        repository.apply {
+        fakeRepository.apply {
             getQuotationResult = Result.success(
                 TransactionQuotation("id1", "100", "1", "challenge_123", 0L)
             )
@@ -115,12 +115,12 @@ class WithdrawalViewModelTest {
             }
         }
 
-        assertEquals("signature_abc", repository.submittedSignature)
+        assertEquals("signature_abc", fakeRepository.submittedSignature)
     }
 
     @Test
     fun `given successful quotation and canceled signing, when SubmitWithdrawal action received, then handles cancellation and reverts state`() = runTest {
-        repository.getQuotationResult = Result.success(
+        fakeRepository.getQuotationResult = Result.success(
             TransactionQuotation("id1", "100", "1", "challenge_123", 0L)
         )
 
@@ -147,7 +147,7 @@ class WithdrawalViewModelTest {
 
     @Test
     fun `given successful quotation and failed signing, when SubmitWithdrawal action received, then handles failure and reverts state`() = runTest {
-        repository.getQuotationResult = Result.success(
+        fakeRepository.getQuotationResult = Result.success(
             TransactionQuotation("id1", "100", "1", "challenge_123", 0L)
         )
 
@@ -174,7 +174,7 @@ class WithdrawalViewModelTest {
 
     @Test
     fun `given failed quotation request, when SubmitWithdrawal action received, then handles failure and reverts state`() = runTest {
-        repository.getQuotationResult = Result.failure(Exception("Network error"))
+        fakeRepository.getQuotationResult = Result.failure(Exception("Network error"))
 
         testedClass.state.test {
             val stateTurbine = this
