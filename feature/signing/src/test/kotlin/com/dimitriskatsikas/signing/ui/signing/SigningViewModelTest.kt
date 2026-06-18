@@ -3,7 +3,6 @@ package com.dimitriskatsikas.signing.ui.signing
 import app.cash.turbine.test
 import com.dimitriskatsikas.common.dispatchers.AppDispatchers
 import com.dimitriskatsikas.navigation.OperationType
-import com.dimitriskatsikas.navigation.Route
 import com.dimitriskatsikas.signing.domain.SigningCoordinator
 import com.dimitriskatsikas.signing.domain.SigningMethod
 import com.dimitriskatsikas.signing.domain.SigningMethodType
@@ -40,7 +39,7 @@ internal class SigningViewModelTest {
         override val main: CoroutineDispatcher = testDispatcher
     }
 
-    private val route = Route.Signing(
+    private val signingRequest = SigningRequest(
         operationType = OperationType.WITHDRAWAL,
         challenge = "test_challenge"
     )
@@ -62,7 +61,7 @@ internal class SigningViewModelTest {
 
     private fun createViewModel() {
         testedClass = SigningViewModel(
-            route = route,
+            signingRequest = signingRequest,
             signingMechanismsRepository = repository,
             signingCoordinator = signingCoordinator,
             appDispatchers = appDispatchers
@@ -151,7 +150,7 @@ internal class SigningViewModelTest {
             createViewModel()
             advanceUntilIdle()
 
-            val resultDeferred = async { signingCoordinator.awaitResult(route.challenge) }
+            val resultDeferred = async { signingCoordinator.awaitResult(signingRequest.challenge) }
 
             testedClass.effect.test {
                 testedClass.onUiAction(
@@ -179,7 +178,7 @@ internal class SigningViewModelTest {
             createViewModel()
             advanceUntilIdle()
 
-            val resultDeferred = async { signingCoordinator.awaitResult(route.challenge) }
+            val resultDeferred = async { signingCoordinator.awaitResult(signingRequest.challenge) }
 
             testedClass.effect.test {
                 testedClass.onUiAction(
@@ -203,7 +202,7 @@ internal class SigningViewModelTest {
             createViewModel()
             advanceUntilIdle()
 
-            val resultDeferred = async { signingCoordinator.awaitResult(route.challenge) }
+            val resultDeferred = async { signingCoordinator.awaitResult(signingRequest.challenge) }
 
             testedClass.effect.test {
                 testedClass.onUiAction(UiAction.BackPress)

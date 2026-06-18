@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dimitriskatsikas.common.dispatchers.AppDispatchers
 import com.dimitriskatsikas.navigation.OperationType
-import com.dimitriskatsikas.navigation.Route
 import com.dimitriskatsikas.signing.domain.SigningCoordinator
 import com.dimitriskatsikas.signing.domain.SigningMethod
 import com.dimitriskatsikas.signing.domain.SigningMethodsRepository
@@ -26,14 +25,14 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = SigningViewModel.Factory::class)
 internal class SigningViewModel @AssistedInject constructor(
-    @Assisted private val route: Route.Signing,
+    @Assisted private val signingRequest: SigningRequest,
     private val signingMechanismsRepository: SigningMethodsRepository,
     private val signingCoordinator: SigningCoordinator,
     private val appDispatchers: AppDispatchers
 ) : ViewModel() {
 
-    private val operationType: OperationType = route.operationType
-    private val challenge: String = route.challenge
+    private val operationType: OperationType = signingRequest.operationType
+    private val challenge: String = signingRequest.challenge
     private var signingMethods: List<SigningMethod> = emptyList()
 
     private val _state = MutableStateFlow<SigningView.State>(SigningView.State.Loading)
@@ -127,6 +126,6 @@ internal class SigningViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(route: Route.Signing): SigningViewModel
+        fun create(signingRequest: SigningRequest): SigningViewModel
     }
 }

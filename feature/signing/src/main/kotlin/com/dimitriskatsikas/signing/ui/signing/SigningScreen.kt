@@ -15,7 +15,12 @@ fun SigningScreen(
     backStack: SnapshotStateList<Route>
 ) {
     val viewModel: SigningViewModel = hiltViewModel { factory: SigningViewModel.Factory ->
-        factory.create(route)
+        factory.create(
+            SigningRequest(
+                challenge = route.challenge,
+                operationType = route.operationType
+            )
+        )
     }
     val state by viewModel.state.collectAsStateWithLifecycle()
 
