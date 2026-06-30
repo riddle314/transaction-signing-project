@@ -65,14 +65,10 @@ internal class WithdrawalViewModel @Inject constructor(
 
                 withdrawalTransactionRepository.getQuotation(amount)
                     .onSuccess { result ->
-                        _effect.send(
-                            WithdrawalView.Effect.NavigateToSigning(
-                                operationType = OperationType.WITHDRAWAL,
-                                challenge = result.challenge
-                            )
-                        )
-
-                        when (val signingResult = signingCoordinator.awaitResult(result.challenge)) {
+                        when (val signingResult = signingCoordinator.awaitResult(
+                            challenge = result.challenge,
+                            operationType = OperationType.WITHDRAWAL
+                        )) {
                             is SigningResult.Success -> {
                                 withdrawalTransactionRepository.submitSignedTransaction(signature = signingResult.signature)
                                     .onSuccess {

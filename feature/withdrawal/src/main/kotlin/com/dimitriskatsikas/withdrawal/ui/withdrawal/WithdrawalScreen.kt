@@ -6,18 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dimitriskatsikas.navigation.Route
 import com.dimitriskatsikas.transactionsigning.feature.withdrawal.R
 import com.dimitriskatsikas.withdrawal.ui.withdrawal.components.WithdrawalContent
 
 @Composable
-fun WithdrawalScreen(
-    backStack: SnapshotStateList<Route>
-) {
+fun WithdrawalScreen() {
     val viewModel: WithdrawalViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -34,7 +30,6 @@ fun WithdrawalScreen(
             handleEffect(
                 context = context,
                 effect = effect,
-                backStack = backStack,
                 snackbarHostState = snackbarHostState
             )
         }
@@ -44,17 +39,9 @@ fun WithdrawalScreen(
 private suspend fun handleEffect(
     context: Context,
     effect: WithdrawalView.Effect,
-    backStack: SnapshotStateList<Route>,
     snackbarHostState: SnackbarHostState
 ) {
     when (effect) {
-        is WithdrawalView.Effect.NavigateToSigning -> backStack.add(
-            Route.Signing(
-                operationType = effect.operationType,
-                challenge = effect.challenge
-            )
-        )
-
         is WithdrawalView.Effect.ShowErrorToast -> {
             val message = when (effect.errorType) {
                 WithdrawalView.ErrorType.TransactionCanceled -> {
