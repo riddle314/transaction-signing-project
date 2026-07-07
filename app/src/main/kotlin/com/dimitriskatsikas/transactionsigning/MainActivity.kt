@@ -17,7 +17,7 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    private lateinit var signingCoordinator: SigningCoordinator
+    lateinit var signingCoordinator: SigningCoordinator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

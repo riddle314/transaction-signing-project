@@ -1,5 +1,6 @@
 package com.dimitriskatsikas.signing.domain
 
+import com.dimitriskatsikas.navigation.OperationType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -24,7 +25,7 @@ internal class SigningCoordinatorTest {
             // UnconfinedTestDispatcher runs the async block eagerly until it suspends,
             // so coordinator.awaitResult has executed and is waiting on deferred.await() inside the coordinator.
             val deferredResult = async {
-                testedClass.awaitResult(challenge)
+                testedClass.awaitResult(challenge, OperationType.WITHDRAWAL)
             }
 
             assertFalse(deferredResult.isCompleted)
@@ -46,7 +47,7 @@ internal class SigningCoordinatorTest {
             // UnconfinedTestDispatcher runs the async block eagerly until it suspends,
             // so coordinator.awaitResult has executed and is waiting on deferred.await() inside the coordinator.
             val deferredResult = async {
-                testedClass.awaitResult(challenge)
+                testedClass.awaitResult(challenge, OperationType.WITHDRAWAL)
             }
 
             // Should be active/suspended

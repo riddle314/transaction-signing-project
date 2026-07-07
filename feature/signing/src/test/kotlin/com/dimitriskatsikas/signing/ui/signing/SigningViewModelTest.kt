@@ -150,7 +150,12 @@ internal class SigningViewModelTest {
             createViewModel()
             advanceUntilIdle()
 
-            val resultDeferred = async { signingCoordinator.awaitResult(signingRequest.challenge) }
+            val resultDeferred = async {
+                signingCoordinator.awaitResult(
+                    signingRequest.challenge,
+                    signingRequest.operationType
+                )
+            }
 
             testedClass.effect.test {
                 testedClass.onUiAction(
@@ -178,7 +183,12 @@ internal class SigningViewModelTest {
             createViewModel()
             advanceUntilIdle()
 
-            val resultDeferred = async { signingCoordinator.awaitResult(signingRequest.challenge) }
+            val resultDeferred = async {
+                signingCoordinator.awaitResult(
+                    signingRequest.challenge,
+                    signingRequest.operationType
+                )
+            }
 
             testedClass.effect.test {
                 testedClass.onUiAction(
@@ -202,7 +212,12 @@ internal class SigningViewModelTest {
             createViewModel()
             advanceUntilIdle()
 
-            val resultDeferred = async { signingCoordinator.awaitResult(signingRequest.challenge) }
+            val resultDeferred = async {
+                signingCoordinator.awaitResult(
+                    signingRequest.challenge,
+                    signingRequest.operationType
+                )
+            }
 
             testedClass.effect.test {
                 testedClass.onUiAction(UiAction.BackPress)

@@ -25,7 +25,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class WithdrawalViewModelTest {
+internal class WithdrawalViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -101,12 +101,6 @@ class WithdrawalViewModelTest {
                 // Loading state
                 assertEquals(State.Content("100", CtaState.Loading), stateTurbine.awaitItem())
 
-                // Navigate effect
-                assertEquals(
-                    Effect.NavigateToSigning(OperationType.WITHDRAWAL, "challenge_123"),
-                    effectTurbine.awaitItem()
-                )
-
                 // Resume via signingCoordinator
                 signingCoordinator.sendResult("challenge_123", SigningResult.Success("signature_abc"))
 
@@ -135,7 +129,6 @@ class WithdrawalViewModelTest {
 
                 testedClass.onUiAction(UiAction.SubmitWithdrawal)
                 assertEquals(State.Content("100", CtaState.Loading), stateTurbine.awaitItem())
-                effectTurbine.awaitItem() // Skip NavigateToSigning
 
                 signingCoordinator.sendResult("challenge_123", SigningResult.Canceled)
 
@@ -162,7 +155,6 @@ class WithdrawalViewModelTest {
 
                 testedClass.onUiAction(UiAction.SubmitWithdrawal)
                 assertEquals(State.Content("100", CtaState.Loading), stateTurbine.awaitItem())
-                effectTurbine.awaitItem() // Skip NavigateToSigning
 
                 signingCoordinator.sendResult("challenge_123", SigningResult.Failed)
 
