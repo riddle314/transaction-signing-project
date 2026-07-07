@@ -1,5 +1,6 @@
 package com.dimitriskatsikas.signing.domain
 
+import app.cash.turbine.test
 import com.dimitriskatsikas.navigation.OperationType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -63,5 +64,26 @@ internal class SigningCoordinatorTest {
             testedClass.sendResult(challenge, SigningResult.Canceled)
             val actualResult = deferredResult.await()
             assertEquals(SigningResult.Canceled, actualResult)
+        }
+
+    @Test
+    fun `when awaiting result, then a navigation request is emitted`() =
+        runTest(testDispatcher) {
+            val challenge = "test_challenge"
+            val operationType = OperationType.WITHDRAWAL
+
+            testedClass.navigationRequests.test {
+                val deferredResult = async {
+                    testedClass.awaitResult(challenge, operationType)
+                }
+
+                assertEquals(
+                    NavigationRequest(challenge, operationType),
+                    awaitItem()
+                )
+
+                testedClass.sendResult(challenge, SigningResult.Canceled)
+                deferredResult.await()
+            }
         }
 }
